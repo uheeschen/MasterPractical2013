@@ -3,6 +3,8 @@
 #Description: perform pairwise comparison of sequence search methods
 #######################################################################
 
+library(ggplot2)
+
 loadBlastTSV <- function(file) {
   data <- read.csv(file=file, sep='\t', header=FALSE, comment.char='#')
   names(data) <- c('query', 
@@ -34,7 +36,8 @@ data.titles <- c('Blast of BCKDHA',
                  'PSI-Blast of BCKDHA [iter. 10, eval. 0.002]',
                  'PSI-Blast of BCKDHA [iter. 10, eval. 10e-10]')
 input.files <- file.path(
-  '/mnt/home/student/weish/master-practical-2013/task02/01-seq-search/results',
+  '/home/wei/git/MasterPractical2013/results/task02/01-seq-search/search-results',
+  #'/mnt/home/student/weish/master-practical-2013/task02/01-seq-search/results',
   input.filenames)
 
 ###
@@ -43,8 +46,12 @@ input.files <- file.path(
 for (f in 1:length(input.files)) {
   filename <- input.filenames[f]
   data <- loadBlastTSV(input.files[f])
+  data <- ggplot(data, aes(x=eval), aes_string(x='E-value'))
   #plot distribution of E-values
-  pdf(file=paste('evalues-distribution', filename, '.pdf', sep='_'))
-  hist(data$eval, main=paste('E-value distribution of', data.titles[f]))
-  dev.off()
+  data + geom_histogram(binwidth=0.1) + scale_y_log10()
+  ggsave(paste(
+    'evalues-distribution', 
+    filename, 
+    '.pdf', 
+    sep='_'))
 }
