@@ -5,7 +5,7 @@
 
 loadBlastTSV <- function(file) {
   data <- read.csv(file=file, sep='\t', header=FALSE, comment.char='#')
-  col.names(data) <- c('query', 
+  names(data) <- c('query', 
                        'hit', 
                        'identity', 
                        'algn_len', 
