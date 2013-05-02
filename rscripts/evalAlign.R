@@ -45,12 +45,19 @@ input.files <- file.path(
 ###
 for (f in 1:length(input.files)) {
   filename <- input.filenames[f]
-  data <- loadBlastTSV(input.files[f])
-  data <- ggplot(data, aes(x=eval), aes_string(x='E-value'))
+  d <- loadBlastTSV(input.files[f])
+  data <- ggplot(d, aes(x=eval), aes_string(x='E-value'))
   #plot distribution of E-values
   data + geom_histogram(binwidth=0.1) + scale_y_log10()
   ggsave(paste(
     'evalues-distribution', 
+    filename, 
+    '.pdf', 
+    sep='_'))
+  identity <- ggplot(d, aes(x=identity))
+  identity + geom_histogram() + scale_y_log10()
+  ggsave(paste(
+    'identity-distribution', 
     filename, 
     '.pdf', 
     sep='_'))
