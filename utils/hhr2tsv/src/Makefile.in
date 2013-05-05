@@ -49,7 +49,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-hhr2tsv_PROGRAMS = hhr2tsv$(EXEEXT)
+bin_PROGRAMS = hhr2tsv$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -60,13 +60,11 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am__installdirs = "$(DESTDIR)$(hhr2tsvdir)"
-PROGRAMS = $(hhr2tsv_PROGRAMS)
-am_hhr2tsv_OBJECTS = hhr2tsv-convert.$(OBJEXT) hhr2tsv-main.$(OBJEXT)
+am__installdirs = "$(DESTDIR)$(bindir)"
+PROGRAMS = $(bin_PROGRAMS)
+am_hhr2tsv_OBJECTS = convert.$(OBJEXT) main.$(OBJEXT)
 hhr2tsv_OBJECTS = $(am_hhr2tsv_OBJECTS)
 hhr2tsv_LDADD = $(LDADD)
-hhr2tsv_LINK = $(CCLD) $(hhr2tsv_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
-	$(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -171,9 +169,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-hhr2tsvdir = ../
-hhr2tsv_SOURCES = convert.c main.c
-hhr2tsv_CFLAGS = -I../include
+hhr2tsv_SOURCES = convert.h convert.c main.c 
 all: all-am
 
 .SUFFIXES:
@@ -208,12 +204,12 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
-install-hhr2tsvPROGRAMS: $(hhr2tsv_PROGRAMS)
+install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
-	@list='$(hhr2tsv_PROGRAMS)'; test -n "$(hhr2tsvdir)" || list=; \
+	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
 	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(hhr2tsvdir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(hhr2tsvdir)" || exit 1; \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(bindir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(bindir)" || exit 1; \
 	fi; \
 	for p in $$list; do echo "$$p $$p"; done | \
 	sed 's/$(EXEEXT)$$//' | \
@@ -231,26 +227,26 @@ install-hhr2tsvPROGRAMS: $(hhr2tsv_PROGRAMS)
 	while read type dir files; do \
 	    if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
 	    test -z "$$files" || { \
-	      echo " $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files '$(DESTDIR)$(hhr2tsvdir)$$dir'"; \
-	      $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files "$(DESTDIR)$(hhr2tsvdir)$$dir" || exit $$?; \
+	      echo " $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files '$(DESTDIR)$(bindir)$$dir'"; \
+	      $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files "$(DESTDIR)$(bindir)$$dir" || exit $$?; \
 	    } \
 	; done
 
-uninstall-hhr2tsvPROGRAMS:
+uninstall-binPROGRAMS:
 	@$(NORMAL_UNINSTALL)
-	@list='$(hhr2tsv_PROGRAMS)'; test -n "$(hhr2tsvdir)" || list=; \
+	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
 	files=`for p in $$list; do echo "$$p"; done | \
 	  sed -e 'h;s,^.*/,,;s/$(EXEEXT)$$//;$(transform)' \
 	      -e 's/$$/$(EXEEXT)/' `; \
 	test -n "$$list" || exit 0; \
-	echo " ( cd '$(DESTDIR)$(hhr2tsvdir)' && rm -f" $$files ")"; \
-	cd "$(DESTDIR)$(hhr2tsvdir)" && rm -f $$files
+	echo " ( cd '$(DESTDIR)$(bindir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(bindir)" && rm -f $$files
 
-clean-hhr2tsvPROGRAMS:
-	-test -z "$(hhr2tsv_PROGRAMS)" || rm -f $(hhr2tsv_PROGRAMS)
+clean-binPROGRAMS:
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 hhr2tsv$(EXEEXT): $(hhr2tsv_OBJECTS) $(hhr2tsv_DEPENDENCIES) $(EXTRA_hhr2tsv_DEPENDENCIES) 
 	@rm -f hhr2tsv$(EXEEXT)
-	$(hhr2tsv_LINK) $(hhr2tsv_OBJECTS) $(hhr2tsv_LDADD) $(LIBS)
+	$(LINK) $(hhr2tsv_OBJECTS) $(hhr2tsv_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -258,8 +254,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hhr2tsv-convert.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hhr2tsv-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convert.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -274,34 +270,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c `$(CYGPATH_W) '$<'`
-
-hhr2tsv-convert.o: convert.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hhr2tsv_CFLAGS) $(CFLAGS) -MT hhr2tsv-convert.o -MD -MP -MF $(DEPDIR)/hhr2tsv-convert.Tpo -c -o hhr2tsv-convert.o `test -f 'convert.c' || echo '$(srcdir)/'`convert.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/hhr2tsv-convert.Tpo $(DEPDIR)/hhr2tsv-convert.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='convert.c' object='hhr2tsv-convert.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hhr2tsv_CFLAGS) $(CFLAGS) -c -o hhr2tsv-convert.o `test -f 'convert.c' || echo '$(srcdir)/'`convert.c
-
-hhr2tsv-convert.obj: convert.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hhr2tsv_CFLAGS) $(CFLAGS) -MT hhr2tsv-convert.obj -MD -MP -MF $(DEPDIR)/hhr2tsv-convert.Tpo -c -o hhr2tsv-convert.obj `if test -f 'convert.c'; then $(CYGPATH_W) 'convert.c'; else $(CYGPATH_W) '$(srcdir)/convert.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/hhr2tsv-convert.Tpo $(DEPDIR)/hhr2tsv-convert.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='convert.c' object='hhr2tsv-convert.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hhr2tsv_CFLAGS) $(CFLAGS) -c -o hhr2tsv-convert.obj `if test -f 'convert.c'; then $(CYGPATH_W) 'convert.c'; else $(CYGPATH_W) '$(srcdir)/convert.c'; fi`
-
-hhr2tsv-main.o: main.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hhr2tsv_CFLAGS) $(CFLAGS) -MT hhr2tsv-main.o -MD -MP -MF $(DEPDIR)/hhr2tsv-main.Tpo -c -o hhr2tsv-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/hhr2tsv-main.Tpo $(DEPDIR)/hhr2tsv-main.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='main.c' object='hhr2tsv-main.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hhr2tsv_CFLAGS) $(CFLAGS) -c -o hhr2tsv-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
-
-hhr2tsv-main.obj: main.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hhr2tsv_CFLAGS) $(CFLAGS) -MT hhr2tsv-main.obj -MD -MP -MF $(DEPDIR)/hhr2tsv-main.Tpo -c -o hhr2tsv-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/hhr2tsv-main.Tpo $(DEPDIR)/hhr2tsv-main.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='main.c' object='hhr2tsv-main.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(hhr2tsv_CFLAGS) $(CFLAGS) -c -o hhr2tsv-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -389,7 +357,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(PROGRAMS)
 installdirs:
-	for dir in "$(DESTDIR)$(hhr2tsvdir)"; do \
+	for dir in "$(DESTDIR)$(bindir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -424,7 +392,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic clean-hhr2tsvPROGRAMS mostlyclean-am
+clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
@@ -444,13 +412,13 @@ info: info-am
 
 info-am:
 
-install-data-am: install-hhr2tsvPROGRAMS
+install-data-am:
 
 install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am:
+install-exec-am: install-binPROGRAMS
 
 install-html: install-html-am
 
@@ -489,29 +457,29 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-hhr2tsvPROGRAMS
+uninstall-am: uninstall-binPROGRAMS
 
 .MAKE: install-am install-strip
 
-.PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
-	clean-hhr2tsvPROGRAMS ctags distclean distclean-compile \
+.PHONY: CTAGS GTAGS all all-am check check-am clean clean-binPROGRAMS \
+	clean-generic ctags distclean distclean-compile \
 	distclean-generic distclean-tags distdir dvi dvi-am html \
-	html-am info info-am install install-am install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-hhr2tsvPROGRAMS install-html \
-	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-hhr2tsvPROGRAMS
+	html-am info info-am install install-am install-binPROGRAMS \
+	install-data install-data-am install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
+	install-info install-info-am install-man install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	installcheck installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
+	uninstall-am uninstall-binPROGRAMS
 
 
 convert.o:
-	$(COMPILE) -DEXIT_CODE=0 -c convert.c
+	$(CC) -DEXIT_CODE=0 -c convert.c
 
 main.o: convert.o
-	$(COMPILE) -DEXIT_CODE=0 -c main.c
+	$(CC) -DEXIT_CODE=0 -c main.c
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

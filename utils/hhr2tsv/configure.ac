@@ -3,8 +3,8 @@
 m4_pattern_allow(AC_PROG_CC_C)
 
 AC_PREREQ([2.69])
-AC_INIT([FULL-PACKAGE-NAME], [VERSION], [BUG-REPORT-ADDRESS])
-AC_CONFIG_SRCDIR([include/convert.h])
+AC_INIT([hhr2tsv], [1.0])
+AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE
 
